@@ -1,0 +1,33 @@
+# ==========================================
+# .gitignore - Projet Python de base
+# ==========================================
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Environnement virtuel
+venv/
+env/
+.venv/
+
+# Secrets et configuration
+.env
+config_secret.py
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Système
+.DS_Store
+Thumbs.db
+
+# Tests
+.pytest_cache/
+
+# Autres
+*.log
