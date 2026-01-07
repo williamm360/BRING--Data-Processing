@@ -31,3 +31,6 @@ Thumbs.db
 
 # Autres
 *.log
+
+# Donnees
+navigation_data
