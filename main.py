@@ -7,10 +7,7 @@ import pandas as pd
 import json
 from yaml import safe_load
 from scipy.stats import pearsonr
-# from PyQt6.QtGui import *
-# from PyQt6.QtCore import *
-# from PyQt6.QtWidgets import *
-# import threading
+
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -98,7 +95,6 @@ class SingleRun:
         else:
             self.amcl_time = None
 
-        # mean and SD
 
     def stability(self):
         delta_amcl = np.diff(self.amcl_covar_arr)
@@ -168,6 +164,8 @@ class Scenario:
             print(f"run calculated: {self.name}_{i}")
             if i == 0:
                 self.plan_path_dist = run.calculate_plan_distance()
+                self.theo_x = run.plan_x_arr.copy()
+                self.theo_y = run.plan_y_arr.copy()
         self.errors_matrix = np.array(errors_mat)
         self.runs_x_arr = np.array(runs_x)
         self.runs_y_arr = np.array(runs_y)
@@ -256,11 +254,21 @@ class Scenario:
         plt.show()
 
     def plot_paths(self):
-        ...
-        # theo
-        # avg
-        # min
-        # max
+        plt.plot(self.theo_x, self.theo_y, ":r")
+        summed_error = np.array([np.sum(arr) for arr in self.errors_matrix])
+        mean_x = np.mean(self.runs_x_arr, axis=0)
+        mean_y = np.mean(self.runs_y_arr, axis=0)
+        min_x = self.runs_x_arr[np.argmin(summed_error)]
+        min_y = self.runs_y_arr[np.argmin(summed_error)]
+        max_x = self.runs_x_arr[np.argmax(summed_error)]
+        max_y = self.runs_y_arr[np.argmax(summed_error)]
+
+        plt.plot(mean_x, mean_y, ":b")
+        plt.plot(min_x, min_y, "-g")
+        plt.plot(max_x, max_y, "-r")
+        plt.plot(self.theo_x, self.theo_y, ":k")
+
+        plt.show()
 
 
 class Analyse():
@@ -271,6 +279,8 @@ class Analyse():
         self.heat_map("map1", self.scenario, 1)
         for scenario in self.scenario:
             self.heat_map("map1", (scenario,), 1)
+        for scenario in self.scenario:
+            scenario.plot_paths()
 
     def process_data(self):
         ...
@@ -307,7 +317,6 @@ class Analyse():
         for scenario in scenarios:
             cum_heat_map += scenario.heatmap_data(
                 width_meter, height_meter, res)
-            scenario.plot_paths()
 
         plt.imshow(cum_heat_map, extent=[
                    config_dict["origin"][0], config_dict["origin"][0] + width_meter, config_dict["origin"][1], config_dict["origin"][1] + height_meter],
