@@ -7,8 +7,9 @@ import pandas as pd
 import json
 from yaml import safe_load
 from scipy.stats import pearsonr
+import sys
 
-
+np.set_printoptions(threshold=sys.maxsize)
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
 )
@@ -94,7 +95,6 @@ class SingleRun:
             self.amcl_time = self.time_arr[time_index]
         else:
             self.amcl_time = None
-
 
     def stability(self):
         delta_amcl = np.diff(self.amcl_covar_arr)
@@ -208,8 +208,10 @@ class Scenario:
         return paths
 
     def boxplot(self, nb_plots=20):
+        print(self.errors_matrix)
         grouped_error_matrix = np.array_split(self.errors_matrix.T, nb_plots)
-        combined_error_matrix = [arr.flatten() for arr in grouped_error_matrix]
+
+        combined_error_matrix = [arr.ravel() for arr in grouped_error_matrix]
         float_indices = np.linspace(0, len(self.plan_path_dist) - 1, nb_plots)
         indices = np.round(float_indices).astype(int)
         plt.boxplot(combined_error_matrix,

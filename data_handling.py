@@ -8,6 +8,7 @@ import json
 from yaml import safe_load
 from scipy.stats import pearsonr
 from analysis_tools import *
+from functools import lru_cache
 
 
 class SingleRun():
@@ -97,13 +98,16 @@ class SingleRun():
     def get_values():
         ...
 
-    def get_line_plot(self):
+    def get_line_data(self):
         ...
 
     def get_heat_map_data(self):
         ...
 
-    def get_():
+    def get_cdfe_data():
+        ...
+
+    def fetch_expected_values():
         ...
 
 
@@ -118,6 +122,9 @@ class Scenario():
         ...
 
     def set_default_path():
+        ...
+
+    def fetch_values():
         ...
 
 
